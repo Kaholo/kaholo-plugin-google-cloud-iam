@@ -8,7 +8,7 @@ function attachUserToResource(action, settings) {
     let userEmail = action.params.EMAIL;
     let role = action.params.ROLE;
     
-    let keysParam = action.CREDENTIALS || settings.CREDENTIALS
+    let keysParam = action.params.CREDENTIALS || settings.CREDENTIALS
     let keys;
 
     if (typeof keysParam != 'string'){
