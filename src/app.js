@@ -68,6 +68,60 @@ function attachUserToResource(action, settings) {
     })
 }
 
+function setIamPolicy(action, settings) {
+
+    let cloudResourceManager = google.cloudresourcemanager('v1');
+    let resourceId = action.params.RESOURCEID;
+    let userEmail = action.params.EMAIL;
+    let role = action.params.ROLE;
+
+    let keysParam = action.params.CREDENTIALS || settings.CREDENTIALS
+    let keys;
+
+    if (typeof keysParam != 'string'){
+        keys = keysParam;
+    } else {
+        try{
+            keys = JSON.parse(keysParam)
+        }catch(err){
+            return Promise.reject("Invalid credentials JSON");
+        }
+    }
+
+
+    return new Promise((resolve, reject) => {
+        const client = new JWT(
+            keys.client_email,
+            null,
+            keys.private_key,
+            ['https://www.googleapis.com/auth/cloud-platform'],
+        );
+
+        let request = {
+            resource_: resourceId,
+            resource: {
+                policy: {
+                    bindings: {
+                        members: [
+                            `user:${userEmail}`,
+                        ],
+                        role: role
+                    }
+                }
+            },
+            auth: client,
+        };
+
+        cloudResourceManager.projects.setIamPolicy(request, (err, response) => {
+            if (err)
+                return reject(err);
+
+            resolve(response);
+        })
+    })
+}
+
 module.exports = {
-    attachUserToResource : attachUserToResource
+    attachUserToResource : attachUserToResource,
+    setIamPolicy: setIamPolicy
 }

@@ -39,6 +39,32 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "setIamPolicy",
+      "viewName": "Set user policy",
+      "params": [
+        {
+          "name": "CREDENTIALS",
+          "viewName": "Credentials",
+          "type": "vault"
+        },
+        {
+          "name": "RESOURCEID",
+          "viewName": "Resouce ID",
+          "type": "string"
+        },
+        {
+          "name": "EMAIL",
+          "viewName": "User Email",
+          "type": "string"
+        },
+        {
+          "name": "ROLE",
+          "viewName": "Role",
+          "type": "string"
+        }
+      ]
     }
   ]
 }
