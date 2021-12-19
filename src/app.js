@@ -1,110 +1,56 @@
-const { google } = require('googleapis');
-const { JWT } = require('google-auth-library');
+const parsers = require("./parsers");
+const GoogleCloudIamService = require('./google.iam.service');
 
-function _createAuthClient(action,settings){
-    let keysParam = action.params.CREDENTIALS || settings.CREDENTIALS
-    let keys;
-
-    if (typeof keysParam != 'string'){
-        keys = keysParam;
-    } else {
-        try{
-            keys = JSON.parse(keysParam)
-        }catch(err){
-            throw new Error("Invalid credentials JSON");
-        }
-    }
-
-    return new JWT(
-        keys.client_email,
-        null,
-        keys.private_key,
-        ['https://www.googleapis.com/auth/cloud-platform'],
-    );
+async function setProjectPolicy(action, settings){
+    const { policyJson } = action.params;
+    const googleCloudIamService = GoogleCloudIamService.from(action.params, settings);
+    return googleCloudIamService.setProjectPolicy({
+        policyJson: parsers.json(policyJson)
+    });
 }
 
-function attachUserToResource(action, settings) {
-
-    let cloudResourceManager = google.cloudresourcemanager('v1');
-    let resourceId = action.params.RESOURCEID;
-    let userEmail = action.params.EMAIL;
-    let role = action.params.ROLE;
-
-    return new Promise((resolve, reject) => {
-        const client = _createAuthClient(action,settings);
-
-        var request = {
-            resource_: resourceId,
-            auth: client
-        };
-
-        cloudResourceManager.projects.getIamPolicy(request, (err, res) => {
-            if (err) {
-                return reject(err);
-            }
-
-            let data = res.data;
-            data.bindings.push({
-                members: [
-                    `user:${userEmail}`
-                ],
-                role: role
-            })
-
-            var addRequest = {
-                resource_: resourceId,
-                resource: {
-                    policy: {
-                        bindings: data.bindings
-                    }
-                },
-                auth: client,
-            };
-
-            cloudResourceManager.projects.setIamPolicy(addRequest, (addErr, addRes) => {
-                if (addErr)
-                    return reject(addErr);
-
-                resolve(addRes.data);
-            })
-        })
-    })
+async function addPolicyBindingByEmail(action, settings){
+    const { emails, roles, condition } = action.params;
+    const googleCloudIamService = GoogleCloudIamService.from(action.params, settings);
+    return googleCloudIamService.addPolicyBinding({
+        emails: parsers.array(emails),
+        roles: parsers.autocomplete(roles),
+        condition: parsers.string(condition)
+    });
 }
 
-function setIamPolicy(action, settings) {
-
-    let cloudResourceManager = google.cloudresourcemanager('v1');
-    let resourceId = action.params.RESOURCEID;
-    let userEmail = action.params.EMAIL;
-    let role = action.params.ROLE;
-
-    return new Promise((resolve, reject) => {
-        const client = _createAuthClient(action,settings);
-        let request = {
-            resource_: resourceId,
-            resource: {
-                policy: {
-                    bindings: {
-                        members: [
-                            `user:${userEmail}`,
-                        ],
-                        role: role
-                    }
-                }
-            },
-            auth: client,
-        };
-
-        cloudResourceManager.projects.setIamPolicy(request, (err, response) => {
-            if (err)
-                return reject(err);
-
-            resolve(response);
-        })
-    })
+async function addPolicyBindingToServiceAccount(action, settings){
+    const { serviceAccount, roles, condition } = action.params;
+    const googleCloudIamService = GoogleCloudIamService.from(action.params, settings);
+    return googleCloudIamService.addPolicyBinding({
+        emails: [parsers.autocomplete(serviceAccount)],
+        roles: parsers.autocomplete(roles),
+        condition: parsers.string(condition)
+    });
 }
+
+async function getProjectPolicy(action, settings){
+    const googleCloudIamService = GoogleCloudIamService.from(action.params, settings);
+    return googleCloudIamService.getProjectPolicy();
+}
+
+async function listServiceAccounts(action, settings){
+    const googleCloudIamService = GoogleCloudIamService.from(action.params, settings);
+    return googleCloudIamService.listServiceAccounts();
+}
+
+async function listRoles(action, settings){
+    const googleCloudIamService = GoogleCloudIamService.from(action.params, settings);
+    return googleCloudIamService.listRoles();
+} 
 
 module.exports = {
-    attachUserToResource : attachUserToResource,
-    setIamPolicy: setIamPolicy
+    setProjectPolicy,
+	addPolicyBindingByEmail,
+	addPolicyBindingToServiceAccount,
+    getProjectPolicy,
+	listServiceAccounts,
+	listRoles,
+    // Autocomplete Functions
+    ...require("./autocomplete")
 }

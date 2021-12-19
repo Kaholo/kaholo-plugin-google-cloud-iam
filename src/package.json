@@ -1,15 +1,15 @@
 {
-  "name": "kaholo-plugin-googlecloud-iam",
-  "version": "1.0.0",
-  "description": "Google cloud IAM plugin for Kaholo",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Kaholo team",
-  "license": "ISC",
-  "dependencies": {
-    "google-auth-library": "4.0.0",
-    "googleapis": "40.0.0"
-  }
+	"name": "kaholo-plugin-google-cloud-iam",
+	"version": "1.1.0",
+	"description": "Kaholo plugin for integration with Google Cloud IAM Service.",
+	"main": "app.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Kaholo Group(Amit Alon)",
+	"license": "ISC",
+	"dependencies": {
+		"google-auth-library": "^7.10.4",
+		"googleapis": "^92.0.0"
+	}
 }

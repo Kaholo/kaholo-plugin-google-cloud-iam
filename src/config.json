@@ -4,65 +4,230 @@
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "icon.png",
-  "version": "1.0.0",
-  "description": "GCP cloud IAM",
+  "version": "1.1.1",
+  "description": "Integration with Google Cloud IAM Service.",
   "settings": [
     {
-      "name": "CREDENTIALS",
-      "viewName": "Credentials",
-      "type": "vault"
+      "name": "creds",
+      "viewName": "Service Account Credentials",
+      "type": "vault",
+      "description": "Default service account credentials",
+      "placeholder": "google_creds_vault_item",
+      "learnUrl": "https://cloud.google.com/docs/authentication/production"
+    },
+    {
+      "name": "project",
+      "viewName": "Default Project ID",
+      "type": "string",
+      "description": "Default project to use in methods.",
+      "placeholder": "project-01",
+      "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
     }
   ],
   "methods": [
     {
-      "name": "attachUserToResource",
-      "viewName": "Attach user to resource",
+      "name": "setProjectPolicy",
+      "viewName": "Set Project IAM Policy",
       "params": [
         {
-          "name": "CREDENTIALS",
-          "viewName": "Credentials",
-          "type": "vault"
+          "name": "creds",
+          "viewName": "Service Account Credentials",
+          "type": "vault",
+          "description": "Service account credentials",
+          "placeholder": "google_creds_vault_item",
+          "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
-          "name": "RESOURCEID",
-          "viewName": "Resouce ID",
-          "type": "string"
+          "name": "project",
+          "viewName": "Project",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjectsAuto",
+          "description": "Project name",
+          "placeholder": "project-01",
+          "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
-          "name": "EMAIL",
-          "viewName": "User Email",
-          "type": "string"
-        },
-        {
-          "name": "ROLE",
-          "viewName": "Role",
-          "type": "string"
+          "name": "policyJson",
+          "viewName": "Policy JSON",
+          "type": "text",
+          "description": "The policy to apply to the project, in JSON format. Can be provided either as a JSON string, a path to a local file on the agent, or as JS object from code. ",
+          "placeholder": "{\n \"bindings\": [\n  {\n   \"members\": [\n    \"user:jie@example.com\"\n   ],\n   \"role\": \"roles/resourcemanager.organizationAdmin\"\n  },\n  {\n   \"members\": [\n    \"user:raha@example.com\",\n    \"user:jie@example.com\"\n   ],\n   \"role\": \"roles/resourcemanager.projectCreator\"\n  }\n}",
+          "learnUrl": "https://cloud.google.com/iam/docs/policies"
         }
       ]
     },
     {
-      "name": "setIamPolicy",
-      "viewName": "Set user policy",
+      "name": "addPolicyBindingByEmail",
+      "viewName": "Add Project Role Binding By Email",
       "params": [
         {
-          "name": "CREDENTIALS",
-          "viewName": "Credentials",
-          "type": "vault"
+          "name": "creds",
+          "viewName": "Service Account Credentials",
+          "type": "vault",
+          "description": "Service account credentials",
+          "placeholder": "google_creds_vault_item",
+          "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
-          "name": "RESOURCEID",
-          "viewName": "Resouce ID",
-          "type": "string"
+          "name": "project",
+          "viewName": "Project",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjectsAuto",
+          "description": "Project name",
+          "placeholder": "project-01",
+          "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
-          "name": "EMAIL",
-          "viewName": "User Email",
-          "type": "string"
+          "name": "emails",
+          "viewName": "Members Emails",
+          "type": "text",
+          "description": "The emails of the new members to add to the project's IAM policy, under the specified role. Email can either refer to a user email or to a service account's email. Can enter multiple values by separating each with a new line.",
+          "placeholder": "jie@example.com\nraha@example.com",
+          "learnUrl": "https://cloud.google.com/iam/docs/policies"
         },
         {
-          "name": "ROLE",
-          "viewName": "Role",
-          "type": "string"
+          "name": "roles",
+          "viewName": "Roles",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listRolesAuto",
+          "description": "The roles to apply to specified members. Can enter multiple values by entering roles as an array from code.",
+          "placeholder": "roles/compute.admin",
+          "learnUrl": "https://cloud.google.com/iam/docs/understanding-roles"
+        },
+        {
+          "name": "condtion",
+          "viewName": "Condition",
+          "type": "text",
+          "description": "Will apply all new bindings with specified condition. You can use IAM Conditions to define and enforce conditional, attribute-based access control for Google Cloud resources.",
+          "placeholder": "request.time < timestamp(\"2021-01-01T00:00:00Z\")",
+          "learnUrl": "https://cloud.google.com/iam/docs/conditions-overview"
+        }
+      ]
+    },
+    {
+      "name": "addPolicyBindingToServiceAccount",
+      "viewName": "Add Project Role Binding To Service Account",
+      "params": [
+        {
+          "name": "creds",
+          "viewName": "Service Account Credentials",
+          "type": "vault",
+          "description": "Service account credentials",
+          "placeholder": "google_creds_vault_item",
+          "learnUrl": "https://cloud.google.com/docs/authentication/production"
+        },
+        {
+          "name": "project",
+          "viewName": "Project",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjectsAuto",
+          "description": "Project name",
+          "placeholder": "project-01",
+          "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
+        },
+        {
+          "name": "serviceAccount",
+          "viewName": "Service Account",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listServiceAccountsAuto",
+          "description": "Add the role binding for the specified service account.",
+          "placeholder": "Default-Compute-Service-Account",
+          "learnUrl": "https://cloud.google.com/iam/docs/service-accounts"
+        },
+        {
+          "name": "roles",
+          "viewName": "Roles",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listRolesAuto",
+          "description": "The roles to apply to the service account. Can enter multiple values by entering roles as an array from code.",
+          "placeholder": "roles/compute.admin",
+          "learnUrl": "https://cloud.google.com/iam/docs/understanding-roles"
+        },
+        {
+          "name": "condtion",
+          "viewName": "Condition",
+          "type": "text",
+          "description": "Will apply all new bindings with specified condition. You can use IAM Conditions to define and enforce conditional, attribute-based access control for Google Cloud resources.",
+          "placeholder": "request.time < timestamp(\"2021-01-01T00:00:00Z\")",
+          "learnUrl": "https://cloud.google.com/iam/docs/conditions-overview"
+        }
+      ]
+    },
+    {
+      "name": "getProjectPolicy",
+      "viewName": "Get Project IAM Policy",
+      "params": [
+        {
+          "name": "creds",
+          "viewName": "Service Account Credentials",
+          "type": "vault",
+          "description": "Service account credentials",
+          "placeholder": "google_creds_vault_item",
+          "learnUrl": "https://cloud.google.com/docs/authentication/production"
+        },
+        {
+          "name": "project",
+          "viewName": "Project",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjectsAuto",
+          "description": "Project name",
+          "placeholder": "project-01",
+          "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
+        }
+      ]
+    },
+    {
+      "name": "listServiceAccounts",
+      "viewName": "List Service Accounts",
+      "params": [
+        {
+          "name": "creds",
+          "viewName": "Service Account Credentials",
+          "type": "vault",
+          "description": "Service account credentials",
+          "placeholder": "google_creds_vault_item",
+          "learnUrl": "https://cloud.google.com/docs/authentication/production"
+        },
+        {
+          "name": "project",
+          "viewName": "Project",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjectsAuto",
+          "description": "Project name",
+          "placeholder": "project-01",
+          "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
+        }
+      ]
+    },
+    {
+      "name": "listRoles",
+      "viewName": "List Roles",
+      "params": [
+        {
+          "name": "creds",
+          "viewName": "Service Account Credentials",
+          "type": "vault",
+          "description": "Service account credentials",
+          "placeholder": "google_creds_vault_item",
+          "learnUrl": "https://cloud.google.com/docs/authentication/production"
+        },
+        {
+          "name": "project",
+          "viewName": "Project",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjectsAuto",
+          "description": "Project name",
+          "placeholder": "project-01",
+          "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         }
       ]
     }
