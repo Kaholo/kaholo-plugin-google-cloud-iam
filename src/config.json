@@ -4,8 +4,8 @@
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "icon.png",
-  "version": "1.1.2",
-  "category": "CLOUDS",
+  "version": "1.1.3",
+  "category": ["CLOUD", "ACCESS MGMT"],
   "keywords": ["google", "run", "platform", "vm", "instance", "cloud", "cluster", "project", "infra", "infrastructure", "cli", "network", "subnetwork", "firewall", "IP", "route", "storage", "service", "container", "access", "account", "credentials"],
   "description": "Integration with Google Cloud IAM Service.",
   "settings": [
