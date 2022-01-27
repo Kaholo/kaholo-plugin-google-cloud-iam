@@ -1,6 +1,7 @@
 # kaholo-plugin-google-cloud-iam
 Kaholo plugin for integration with Google Cloud IAM Service.
 Google Cloud Identity and Access Management (IAM) is used to create and manage permissions for Google Cloud resources.
+
 **What you can do with Google Cloud IAM Plugin**
 * **Set Project IAM Policy:** Manage access control and policies for your projects
 * **Add Project Role Binding By Email:** Add new members to your project’s IAM policy under a specified role by entering their email address
@@ -10,9 +11,18 @@ Optionally, you can use IAM Conditions to grant access to project members only i
 * **List Service Accounts:** List service accounts for a specified project
 * **List Roles:** List roles within a specified project
 
+# Authentication
+This plugin requires **Service Account Credentials** as provided by GCP in order to authenticate to the Google Cloud services.
+
+Once you have created your Google Cloud Service Account, **create and download the Key in JSON format** from the Google Cloud Platform.
+
+The Key must be stored as a new entry in the Kaholo Vault and can be used within each Method by selecting the corresponding Vault entry from the Credentials field. 
+>**Entire JSON file content needs to be added in the Vault.**
+
+You can see more information on how to create service account keys [here](https://cloud.google.com/iam/docs/creating-managing-service-account-keys).
 
 ##  Settings
-1. Service Account Credentials (Vault) **Required If Not In Action** - Default service account credentials
+1. Service Account Credentials (Vault) **Required If Not In Action** - A Vaulted JSON document containing Google Cloud Service Account credentials as provided by GCP.
 [Learn More](https://cloud.google.com/docs/authentication/production)
 2. Default Project ID (String) **Required If Not In Action** - Default project to use in methods.
 [Learn More](https://cloud.google.com/resource-manager/docs/creating-managing-projects)
@@ -21,9 +31,9 @@ Optionally, you can use IAM Conditions to grant access to project members only i
 Set the specified project's IAM Policy.
 
 ## Parameters
-1. Service Account Credentials (Vault) **Required If Not In Settings** - Service account credentials
+1. Service Account Credentials (Vault) **Required If Not In Settings** - A Vaulted JSON document containing Google Cloud Service Account credentials as provided by GCP.
 [Learn More](https://cloud.google.com/docs/authentication/production)
-2. Project (Autocomplete) **Required If Not In Settings** - Project name
+2. Project (Autocomplete) **Required If Not In Settings** - Project name.
 [Learn More](https://cloud.google.com/resource-manager/docs/creating-managing-projects)
 3. Policy JSON (Text) **Required** - The policy to apply to the project, in JSON format. Can be provided either as a JSON string, a path to a local file on the agent, or as JS object from code. 
 [Learn More](https://cloud.google.com/iam/docs/policies)
@@ -32,9 +42,9 @@ Set the specified project's IAM Policy.
 Add new role bindings to the IAM policy of the specified project, using the specified members emails.
 
 ## Parameters
-1. Service Account Credentials (Vault) **Required If Not In Settings** - Service account credentials
+1. Service Account Credentials (Vault) **Required If Not In Settings** - A Vaulted JSON document containing Google Cloud Service Account credentials as provided by GCP.
 [Learn More](https://cloud.google.com/docs/authentication/production)
-2. Project (Autocomplete) **Required If Not In Settings** - Project name
+2. Project (Autocomplete) **Required If Not In Settings** - Project name.
 [Learn More](https://cloud.google.com/resource-manager/docs/creating-managing-projects)
 3. Members Emails (Text) **Required** - The emails of the new members to add to the project's IAM policy, under the specified role. Email can either refer to a user email or to a service account's email. Can enter multiple values by separating each with a new line.
 [Learn More](https://cloud.google.com/iam/docs/policies)
@@ -47,9 +57,9 @@ Add new role bindings to the IAM policy of the specified project, using the spec
 Add new role bindings for the specified service account in the IAM policy of specified project.
 
 ## Parameters
-1. Service Account Credentials (Vault) **Required If Not In Settings** - Service account credentials
+1. Service Account Credentials (Vault) **Required If Not In Settings** - A Vaulted JSON document containing Google Cloud Service Account credentials as provided by GCP.
 [Learn More](https://cloud.google.com/docs/authentication/production)
-2. Project (Autocomplete) **Required If Not In Settings** - Project name
+2. Project (Autocomplete) **Required If Not In Settings** - Project name.
 [Learn More](https://cloud.google.com/resource-manager/docs/creating-managing-projects)
 3. Service Account (Autocomplete) **Required** - Add the role binding for the specified service account.
 [Learn More](https://cloud.google.com/iam/docs/service-accounts)
@@ -62,25 +72,25 @@ Add new role bindings for the specified service account in the IAM policy of spe
 Get the project's IAM policy.
 
 ## Parameters
-1. Service Account Credentials (Vault) **Required If Not In Settings** - Service account credentials
+1. Service Account Credentials (Vault) **Required If Not In Settings** - A Vaulted JSON document containing Google Cloud Service Account credentials as provided by GCP.
 [Learn More](https://cloud.google.com/docs/authentication/production)
-2. Project (Autocomplete) **Required If Not In Settings** - Project name
+2. Project (Autocomplete) **Required If Not In Settings** - Project name.
 [Learn More](https://cloud.google.com/resource-manager/docs/creating-managing-projects)
 
 ## Method: List Service Accounts
-List all service accounts in the specified project
+List all service accounts in the specified project.
 
 ## Parameters
-1. Service Account Credentials (Vault) **Required If Not In Settings** - Service account credentials
+1. Service Account Credentials (Vault) **Required If Not In Settings** - A Vaulted JSON document containing Google Cloud Service Account credentials as provided by GCP.
 [Learn More](https://cloud.google.com/docs/authentication/production)
-2. Project (Autocomplete) **Required If Not In Settings** - Project name
+2. Project (Autocomplete) **Required If Not In Settings** - Project name.
 [Learn More](https://cloud.google.com/resource-manager/docs/creating-managing-projects)
 
 ## Method: List Roles
-List all predefined google IAM roles and all custom roles in the specified project.
+List all predefined Google IAM roles and all custom roles in the specified project.
 
 ## Parameters
-1. Service Account Credentials (Vault) **Required If Not In Settings** - Service account credentials
+1. Service Account Credentials (Vault) **Required If Not In Settings** - A Vaulted JSON document containing Google Cloud Service Account credentials as provided by GCP.
 [Learn More](https://cloud.google.com/docs/authentication/production)
-2. Project (Autocomplete) **Required If Not In Settings** - Project name
+2. Project (Autocomplete) **Required If Not In Settings** - Project name.
 [Learn More](https://cloud.google.com/resource-manager/docs/creating-managing-projects)
